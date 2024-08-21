@@ -25,7 +25,7 @@ public class Program
 
 
         // Read a raw file and cast the read bytes to floats
-        byte[] inputFile = File.ReadAllBytes("./DTMF.raw");
+        byte[] inputFile = File.ReadAllBytes("./DTMF.raw"); // Single-channel, 32 bit float, 44100hz
         Span<float> samples = MemoryMarshal.Cast<byte, float>(inputFile);
         
         // Create a new output buffer of bytes and write to it as floats
