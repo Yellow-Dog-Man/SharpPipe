@@ -1,10 +1,6 @@
-﻿
+﻿using System.Runtime.InteropServices;
 
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace SharpPipe;
+namespace SharpPipe.Example;
 
 
 public class Program
@@ -40,7 +36,7 @@ public class Program
         float dummy = 0f;
         ref float dummyRef = ref dummy;
 
-        
+        // Process each sample individually
         for (int i = 0; i < samples.Length; i++)
         {
             zita.Compute(samples[i], samples[i], ref dummyRef, ref outputSamples[i]);
