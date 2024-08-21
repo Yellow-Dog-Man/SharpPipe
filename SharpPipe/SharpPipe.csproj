@@ -7,6 +7,8 @@
     <Nullable>enable</Nullable>
     <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <DocumentationFile>./Docs.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

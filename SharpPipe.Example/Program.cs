@@ -9,10 +9,10 @@ namespace SharpPipe;
 
 public class Program
 {
-    public static unsafe void Main(string[] args)
+    public static void Main(string[] args)
     {
-        using SoundPipe pipe = new();
-        // pipe.FileName = "WHO ARE YOUUU";
+        // Make a new SoundPipe object and feed it to the ZitaReverb
+        using SoundPipe pipe = new(); // Defaults to sample rate of 44100hz
         using ZitaReverb zita = new(pipe);
 
         zita.InDelay = 40.0f;
@@ -28,39 +28,26 @@ public class Program
         zita.Level = 0.0f;
 
 
-        Console.WriteLine(pipe.FileName);
-        Console.WriteLine(zita.InDelay);
-        Console.WriteLine(*zita.Data.args.arg0);
-
-
+        // Read a raw file and cast the read bytes to floats
         byte[] inputFile = File.ReadAllBytes("./DTMF.raw");
         Span<float> samples = MemoryMarshal.Cast<byte, float>(inputFile);
         
-        
+        // Create a new output buffer of bytes and write to it as floats
         byte[] outputFile = new byte[inputFile.Length];
         Span<float> outputSamples = MemoryMarshal.Cast<byte, float>(outputFile);
 
-        
+        // Dummy reference because the output only has a single channel
         float dummy = 0f;
         ref float dummyRef = ref dummy;
 
-        for (int i = 0; i < 100; i++)
-        {
-            Console.WriteLine(samples[i]);
-        }
         
         for (int i = 0; i < samples.Length; i++)
         {
-
             zita.Compute(samples[i], samples[i], ref dummyRef, ref outputSamples[i]);
-        }
-
-        for (int i = 0; i < 100; i++)
-        {
-            Console.WriteLine(outputSamples[i]);
         }
         
 
+        // Write processed samples back out to raw
         File.WriteAllBytes("./Output.raw", outputFile);
     }
 }
