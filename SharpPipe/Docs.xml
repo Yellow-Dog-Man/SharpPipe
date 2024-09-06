@@ -1,0 +1,360 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>SharpPipe</name>
+    </assembly>
+    <members>
+        <member name="T:SharpPipe.SoundPipe">
+            <summary>
+            <para>
+            Defines a soundpipe object used for miscellaneous info
+            </para>
+            <para>
+            Usually used for outputting sound files, but is used in some effects for gathering info about
+            how many channels the signal has, what sample rate to use, etc. Its sound file aspects are unused in this wrapper.
+            </para>
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.Disposed">
+            <summary>
+            True if the object is disposed
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.OutputSample">
+            <summary>
+            The output sample from this pipe
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.SampleRate">
+            <summary>
+            The sample rate of the input audio (default: 44100hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.Channels">
+            <summary>
+            How many channels the input audio has (default: 1)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.Length">
+            <summary>
+            The length of the audio data (UNUSED)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.Pos">
+            <summary>
+            The position in the audio data (UNUSED)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.FileName">
+            <summary>
+            The file name to output (UNUSED)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.SoundPipe.Random">
+            <summary>
+            Random unsigned integer (UNUSED)
+            </summary>
+        </member>
+        <member name="M:SharpPipe.SoundPipe.#ctor">
+            <summary>
+            Creates a new sondpipe output
+            </summary>
+        </member>
+        <member name="M:SharpPipe.SoundPipe.Dispose">
+            <summary>
+            Disposes of this unmanaged resource
+            </summary>
+        </member>
+        <member name="M:SharpPipe.SoundPipe.Finalize">
+            <summary>
+            Disposes of any unmanaged resources that ran away
+            </summary>
+        </member>
+        <member name="T:SharpPipe.ZitaReverb">
+            <summary>
+            Uses the 8 FDB zitareverb algorithm to provide reverb to processed samples ( see: https://paulbatchelor.github.io/res/soundpipe/docs/zitarev.html )
+            </summary>
+        </member>
+        <member name="F:SharpPipe.ZitaReverb.Pipe">
+            <summary>
+            The soundpipe object used by this reverb
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.Disposed">
+            <summary>
+            True if the object is disposed
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.Data">
+            <summary>
+            Gets a reference to the struct controlled by this reverb (internal use only)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.InDelay">
+            <summary>
+            The input delay (ms) before reverb is applied to the incoming signal (default: 60ms)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.Crossover">
+            <summary>
+            The separation between 'high' and 'low' frequencies (default: 200hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.RT60Low">
+            <summary>
+            The time in seconds it takes for low frequencies to decrease by 60dB (default: 3 seconds)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.RT60Mid">
+            <summary>
+            The time in seconds it takes for mid frequencies to decrease by 60dB (default: 2 seconds)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.HighFrequencyDamping">
+            <summary>
+            Frequencies (hz) above this one are heard half as long as as the mid-range frequencies - e.g. when their T60 is half of the middle-range's T60 (default: 6000hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.EQ1Frequency">
+            <summary>
+             The center frequency (hz) of the Regalia Mitra peaking equalizer for the first section (default: 315hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.EQ1Level">
+            <summary>
+            The peak level (dB) of equalizer 1 (default: 0dB)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.EQ2Frequency">
+            <summary>
+             The center frequency (hz) of the Regalia Mitra peaking equalizer for the second section (default: 1500hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.EQ2Level">
+            <summary>
+            The peak level (dB) of equalizer 2 (default: 0dB)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.Mix">
+            <summary>
+            Mixes the wet and dry signals - e.g. 0 is no reverb, 1 is only reverb (default: 1)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaReverb.Level">
+            <summary>
+            The factor (dB) to scale the output by (default: -20dB)
+            </summary>
+        </member>
+        <member name="M:SharpPipe.ZitaReverb.#ctor(SharpPipe.SoundPipe)">
+            <summary>
+            Creates a new ZitaReverb processor using the specified soundpipe object for info (sample rate, etc.)
+            </summary>
+            <param name="pipe">The soundpipe object to use</param>
+        </member>
+        <member name="M:SharpPipe.ZitaReverb.Compute(System.Single,System.Single,System.Single@,System.Single@)">
+            <summary>
+            Computes reverb on a single audio sample for left and right channels
+            </summary>
+            <param name="left">Left audio sample</param>
+            <param name="right">Right audio sample</param>
+            <param name="outLeft">Reference to the variable where the result for the left channel will be stored</param>
+            <param name="outRight">Reference to the variable where the result for the right channel will be stored</param>
+        </member>
+        <member name="M:SharpPipe.ZitaReverb.Dispose">
+            <summary>
+            Disposes of this unmanaged resource
+            </summary>
+        </member>
+        <member name="M:SharpPipe.ZitaReverb.Finalize">
+            <summary>
+            Disposes of any unmanaged resources that ran away
+            </summary>
+        </member>
+        <member name="T:SharpPipe.SharpPipeNatives">
+            <summary>
+            <para>
+            Native P/Invoke for creating and destroying <see cref="T:SharpPipe.sp_data"/> structs
+            </para>
+            
+            <para>
+            Remarks: Soundpipe uses a 'Create -> Init -> Compute -> Destroy' data model for its effects,<br/>
+            which is a very idiomatic way in C to use object-oriented patterns. This makes creating C#<br/>
+            wrappers a breeze.
+            </para>
+            </summary>
+        </member>
+        <member name="F:SharpPipe.SharpPipeNatives.FILENAME_BUFFERLENGTH">
+            <summary>
+            Length of the file name buffer for the native sondpipe object
+            </summary>
+        </member>
+        <member name="M:SharpPipe.SharpPipeNatives.sp_create(System.IntPtr@)">
+            <summary>
+            Allocates a <see cref="T:SharpPipe.sp_data"/> struct and assigns its memory address to a pointer passed in by reference
+            </summary>
+            <param name="spObject">Reference to a pointer that will point to the allocated struct</param>
+            <returns>Success code</returns>
+        </member>
+        <member name="M:SharpPipe.SharpPipeNatives.sp_destroy(System.IntPtr@)">
+            <summary>
+            Destroys a native struct implementation of <see cref="T:SharpPipe.sp_data"/> from a reference to its pointer
+            </summary>
+            <param name="spObject">Reference to a pointer to the struct to be freed</param>
+            <returns>Success code</returns>
+        </member>
+        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_create(System.IntPtr@)">
+            <summary>
+            Allocates a <see cref="T:SharpPipe.sp_zitarev"/> struct and assigns its memory address to a pointer passed in by reference
+            </summary>
+            <param name="zitaRevObject">Reference to a pointer that will point to the allocated struct</param>
+            <returns>Success code</returns>
+        </member>
+        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_init(System.IntPtr,System.IntPtr)">
+            <summary>
+            Inits a <see cref="T:SharpPipe.sp_zitarev"/> struct from a pointer to it
+            </summary>
+            <param name="spObject">Pointer to a <see cref="T:SharpPipe.sp_data"/> struct for gathering info</param>
+            <param name="zitaRevObject">Pointer to a <see cref="T:SharpPipe.sp_zitarev"/> struct</param>
+            <returns>Success code</returns>
+        </member>
+        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_compute(System.IntPtr,System.IntPtr,System.Single@,System.Single@,System.Single@,System.Single@)">
+            <summary>
+            Computes a single sample of audio from references to both a left and right channel and assigns the result to the left and right variables passed in by reference
+            </summary>
+            <param name="spObject">Pointer to a <see cref="T:SharpPipe.sp_data"/> struct for gathering info</param>
+            <param name="zitaRevObject">Pointer to a <see cref="T:SharpPipe.sp_zitarev"/> struct</param>
+            <param name="in1">Reference to the left audio sample</param>
+            <param name="in2">Reference to the right audio sample</param>
+            <param name="out1">Reference to the left output audio sample</param>
+            <param name="out2">Reference to the right output audio sample</param>
+            <returns>Success code</returns>
+        </member>
+        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_destroy(System.IntPtr@)">
+            <summary>
+            Frees a <see cref="T:SharpPipe.sp_zitarev"/> struct from memory
+            </summary>
+            <param name="zitaRevObject">Reference to the pointer to the struct to be freed</param>
+            <returns>Success code</returns>
+        </member>
+        <member name="T:SharpPipe.sp_data">
+            <summary>
+            Mirrors the memory layout of the unmanaged sp_data struct from soundpipe
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_data.outSample">
+            <summary>
+            Pointer to the output sample
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_data.sr">
+            <summary>
+            The sample rate (hz)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_data.nchan">
+            <summary>
+            Number of channels
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_data.len">
+            <summary>
+            Length of data
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_data.pos">
+            <summary>
+            Position in data
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_data.filename">
+            <summary>
+            File name byte array
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_data.rand">
+            <summary>
+            Random uint
+            </summary>
+        </member>
+        <member name="T:SharpPipe.sp_zitarev">
+            <summary>
+            Mirrors the memory layout of the unmanaged sp_zitarev struct from soundpipe
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.faust">
+            <summary>
+            Pointer to the internal faust instance
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.argpos">
+            <summary>
+            Position in arguments
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.args">
+            <summary>
+            Inline array of arguments
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.in_delay">
+            <summary>
+            Input delay (ms)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.lf_x">
+            <summary>
+            Crossover frequency
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.rt60_low">
+            <summary>
+            Low-range RT60 (seconds)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.rt60_mid">
+            <summary>
+            Mid-range RT60 (seconds)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.hf_damping">
+            <summary>
+            High-frequency damping (hz)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.eq1_freq">
+            <summary>
+            Frequency of EQ1 (hz)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.eq1_level">
+            <summary>
+            Peak level of EQ1 (dB)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.eq2_freq">
+            <summary>
+            Frequency of EQ2 (hz)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.eq2_level">
+            <summary>
+            Peak level of EQ2 (dB)
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.mix">
+            <summary>
+            Wet/Dry mix
+            </summary>
+        </member>
+        <member name="F:SharpPipe.sp_zitarev.level">
+            <summary>
+            Output level attenuation (dB)
+            </summary>
+        </member>
+        <member name="T:SharpPipe.sp_zitarev_args">
+            <summary>
+            Array struct because P/Invoke is a pain in the butt and doesn't let you do fixed buffers of pointers >:(
+            </summary>
+        </member>
+    </members>
+</doc>
