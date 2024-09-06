@@ -4,4 +4,4 @@ SharpPipe is a managed wrapper around SoundPipe - a C sound processing library m
 
 # Prerequesites
 
-- Soundpipe
+- Our build of soundpipe, found [here](https://github.com/Yellow-Dog-Man/soundpipe)
