@@ -24,15 +24,9 @@ jobs:
         dotnet-version: 8.0.x
     
     - name: Download soundpipe native library
-      uses: dawidd6/action-download-artifact@v6
-      with:
-        name: SoundPipe-Windows-Linux
-        branch: master
-        event: push
-        workflow_conclusion: success
-        repo: YellowDogMan/SharpPipe
-        path: ./SharpPipe
-        github_token: ${{secrets.GITHUB_TOKEN}}
+      run: |
+        Invoke-WebRequest https://github.com/Yellow-Dog-Man/soundpipe/releases/latest/download/SoundPipe-Windows-Linux.zip -OutFile .\SoundPipe-Windows-Linux.zip
+        Extract-Archive .\SoundPipe-Windows-Linux.zip -DestinationPath .\SharpPipe
       
 
     - name: Build
