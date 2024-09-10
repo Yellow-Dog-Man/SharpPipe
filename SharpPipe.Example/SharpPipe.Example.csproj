@@ -10,10 +10,6 @@
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <RestoreSources>$(RestoreSources);../SharpPipe/bin/Release;https://api.nuget.org/v3/index.json</RestoreSources>
-  </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="YellowDogMan.SharpPipe" Version="1.0.0" />
   </ItemGroup>
