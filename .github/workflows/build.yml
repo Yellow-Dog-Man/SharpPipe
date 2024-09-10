@@ -30,7 +30,7 @@ jobs:
         branch: master
         event: push
         workflow_conclusion: success
-        repo: https://github.com/YellowDogMan/SharpPipe
+        repo: YellowDogMan/SharpPipe
         path: ./SharpPipe
         github_token: ${{secrets.GITHUB_TOKEN}}
       
