@@ -8,11 +8,29 @@
     <LangVersion>12</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
+    <Description>Provides a managed wrapper around libsoundpipe to enable processing audio using a variety of filters</Description>
+    <PackageId>YellowDogMan.SharpPipe</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Yellow Dog Man Studios</Authors>
+    <Company>Yellow Dog Man Studios</Company>
+    <Copyright>Copyright (c) Yellow Dog Man Studios s.r.o. 2024</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>sound processing wrapper</PackageTags>
+    <RepositoryUrl>https://github.com/Yellow-Dog-Man/SharpPipe</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  
+
     <DocumentationFile>./Docs.xml</DocumentationFile>
+    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Memory" Version="4.5.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="runtimes\win-x64\native\libsoundpipe.dll" Pack="true" PackagePath="runtimes\win-x64\native\" />
+    <None Include="runtimes\linux-x64\native\libsoundpipe.so" Pack="true" PackagePath="runtimes\linux-x64\native\" />
   </ItemGroup>
 
 </Project>
