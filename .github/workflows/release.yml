@@ -1,16 +1,16 @@
-name: Build Library
-run-name: ${{ github.actor }} is building SharpPipe
+name: Publish Library
+run-name: ${{ github.actor }} is publishing SharpPipe
 
-on:
-  push:
-    paths-ignore:
-      - '**/*.md'
-    branches:
-      - main
+on:  
+  release:
+    types: [published]
 
 
 jobs:
-  build:
+  publish:
+    env:
+      VERSION: ${{ github.event.release.tag_name }}
+    
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
@@ -27,11 +27,7 @@ jobs:
       
     - name: Build
       working-directory: ./SharpPipe
-      run: dotnet pack -c Release
+      run: dotnet pack -c Release -p:Version=${{ env.VERSION }} -p:PackageVersion=${{ env.VERSION }}
     
-    - name: Put a big red bow on it
-      uses: actions/upload-artifact@v4
-      with:
-        name: SharpPipe
-        path: SharpPipe/bin/Release/*.nupkg
-      
+    - name: Nuget Publish
+      run: dotnet nuget push .\LiteNetLib\bin\Release\*.nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
