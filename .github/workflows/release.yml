@@ -30,4 +30,4 @@ jobs:
       run: dotnet pack -c Release -p:Version=${{ env.VERSION }} -p:PackageVersion=${{ env.VERSION }}
     
     - name: Nuget Publish
-      run: dotnet nuget push .\LiteNetLib\bin\Release\*.nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push .\SharpPipe\bin\Release\*.nupkg -k ${{ secrets.NUGET_TOKEN }} -s https://api.nuget.org/v3/index.json
