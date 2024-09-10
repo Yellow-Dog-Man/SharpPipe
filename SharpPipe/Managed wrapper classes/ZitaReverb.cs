@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace SharpPipe;
 
@@ -149,6 +150,27 @@ public class ZitaReverb : IDisposable
     {
         SharpPipeNatives.sp_zitarev_compute(Pipe.pipeObject, zitaRevObject, ref left, ref right, ref outLeft, ref outRight);
     }
+
+
+    // I don't understand P/Invoke well enough to do this yet and it was eating a lot of time.
+    // /// <summary>
+    // /// Computes reverb on a span of audio samples and places them into an output buffer
+    // /// </summary>
+    // /// <param name="stereoIn">Left audio sample</param>
+    // /// <param name="stereoOut">Right audio sample</param>
+    // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    // public unsafe void Compute(Span<float> stereoIn, Span<float> stereoOut)
+    // {
+    //     if (stereoIn.Length != stereoOut.Length)
+    //         throw new ArgumentException($"Input and output spans are of inequal length! (stereoIn length: {stereoIn.Length}, stereoOut length: {stereoOut.Length})");
+
+
+    //     IntPtr inPtr = new(Unsafe.AsPointer(ref stereoIn[0]));
+    //     IntPtr outPtr = new(Unsafe.AsPointer(ref stereoOut[0]));
+
+    //     SharpPipeNatives.sp_zitarev_compute_many(Pipe.pipeObject, zitaRevObject, stereoIn.Length, ref inPtr, ref outPtr);
+    // }
+
     
     
     /// <summary>
