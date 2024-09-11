@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="YellowDogMan.SharpPipe" Version="1.0.0" />
+    <ProjectReference Include="..\SharpPipe\SharpPipe.csproj" />
   </ItemGroup>
 
 </Project>

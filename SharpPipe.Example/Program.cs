@@ -9,19 +9,29 @@ public class Program
     {
         // Make a new SoundPipe object and feed it to the ZitaReverb
         using SoundPipe pipe = new(); // Defaults to sample rate of 44100hz
+        
+        // Bathroom preset
+        ZitaParameters zitaParams = new()
+        {
+            InDelay = 5f,
+            Crossover = 200f,
+            RT60Low = 1.49f,
+            RT60Mid = 1.3f,
+            HighFrequencyDamping = 5000f,
+            EQ1Frequency = 120f,
+            EQ1Level = 8f,
+            EQ2Frequency = 1200f,
+            EQ2Level = 6.5545f,
+            Mix = 0.7f,
+            Level = 7f
+        };
+
+        // Set up a zita reverb object
         using ZitaReverb zita = new(pipe);
 
-        zita.InDelay = 5f;
-        zita.Crossover = 200f;
-        zita.RT60Low = 1.49f;
-        zita.RT60Mid = 1.3f;
-        zita.HighFrequencyDamping = 5000f;
-        zita.EQ1Frequency = 120f;
-        zita.EQ1Level = 8f;
-        zita.EQ2Frequency = 1200f;
-        zita.EQ2Level = 6.5545f;
-        zita.Mix = 0.7f;
-        zita.Level = 7f;
+        // Since ZitaParameters and ZitaReverb both implement
+        // IZitaFilter, their parameters can be interchanged very easily
+        zita.FromOther(zitaParams);
 
 
         // Read a raw file and cast the read bytes to floats
@@ -32,14 +42,18 @@ public class Program
         byte[] outputFile = new byte[inputFile.Length];
         Span<float> outputSamples = MemoryMarshal.Cast<byte, float>(outputFile);
 
-        // Dummy reference because the output only has a single channel
-        float dummy = 0f;
-        ref float dummyRef = ref dummy;
+        // Left and right channel variables
+        float left = 0f;
+        float right = 0f;
 
         // Process each sample individually
         for (int i = 0; i < samples.Length; i++)
         {
-            zita.Compute(samples[i], samples[i], ref dummyRef, ref outputSamples[i]);
+            // Pass in both samples since this is a mono input.
+            // You would usually pass in the left and right sample and receive
+            // a processed left and right sample in return
+            zita.Compute(samples[i], samples[i], ref left, ref right);
+            outputSamples[i] = (left + right) / 2f; // Average into a single sample
         }
         
 
