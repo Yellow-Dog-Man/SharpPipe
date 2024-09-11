@@ -10,7 +10,6 @@
 
     <Description>Provides a managed wrapper around libsoundpipe to enable processing audio using a variety of filters</Description>
     <PackageId>YellowDogMan.SharpPipe</PackageId>
-    <Version>1.0.0</Version>
     <Authors>Yellow Dog Man Studios</Authors>
     <Company>Yellow Dog Man Studios</Company>
     <Copyright>Copyright (c) Yellow Dog Man Studios s.r.o. 2024</Copyright>
