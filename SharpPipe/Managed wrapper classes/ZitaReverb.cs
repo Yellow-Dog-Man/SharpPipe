@@ -7,14 +7,14 @@ namespace SharpPipe;
 /// <summary>
 /// Uses the 8 FDB zitareverb algorithm to provide reverb to processed samples ( see: https://paulbatchelor.github.io/res/soundpipe/docs/zitarev.html )
 /// </summary>
-public class ZitaReverb : IDisposable
+public class ZitaReverb : IDisposable, IZitaFilter
 {
     internal IntPtr zitaRevObject;
 
     /// <summary>
     /// The soundpipe object used by this reverb
     /// </summary>
-    public SoundPipe Pipe;
+    public SoundPipe Pipe { get; }
 
     /// <summary>
     /// True if the object is disposed
