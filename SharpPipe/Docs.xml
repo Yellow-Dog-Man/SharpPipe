@@ -4,6 +4,78 @@
         <name>SharpPipe</name>
     </assembly>
     <members>
+        <member name="T:SharpPipe.ParameterHelper">
+            <summary>
+            Helper class for easier manipulation of parameters
+            </summary>
+        </member>
+        <member name="M:SharpPipe.ParameterHelper.FromOther(SharpPipe.IZitaFilter,SharpPipe.IZitaFilter@)">
+            <summary>
+            Copies the parameters from one Zita filter implementation to another
+            </summary>
+            <param name="zita">This Zita filter</param>
+            <param name="other">The Zita filter to copy parameters from</param>
+        </member>
+        <member name="T:SharpPipe.IZitaFilter">
+            <summary>
+            Represents the interface for Zita Reverb objects
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.InDelay">
+            <summary>
+            The input delay (ms) before reverb is applied to the incoming signal (default: 60ms)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.Crossover">
+            <summary>
+            The separation between 'high' and 'low' frequencies (default: 200hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.RT60Low">
+            <summary>
+            The time in seconds it takes for low frequencies to decrease by 60dB (default: 3 seconds)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.RT60Mid">
+            <summary>
+            The time in seconds it takes for mid frequencies to decrease by 60dB (default: 2 seconds)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.HighFrequencyDamping">
+            <summary>
+            Frequencies (hz) above this one are heard half as long as as the mid-range frequencies - e.g. when their T60 is half of the middle-range's T60 (default: 6000hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.EQ1Frequency">
+            <summary>
+             The center frequency (hz) of the Regalia Mitra peaking equalizer for the first section (default: 315hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.EQ1Level">
+            <summary>
+            The peak level (dB) of equalizer 1 (default: 0dB)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.EQ2Frequency">
+            <summary>
+             The center frequency (hz) of the Regalia Mitra peaking equalizer for the second section (default: 1500hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.EQ2Level">
+            <summary>
+            The peak level (dB) of equalizer 2 (default: 0dB)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.Mix">
+            <summary>
+            Mixes the wet and dry signals - e.g. 0 is no reverb, 1 is only reverb (default: 1)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IZitaFilter.Level">
+            <summary>
+            The factor (dB) to scale the output by (default: -20dB)
+            </summary>
+        </member>
         <member name="T:SharpPipe.SoundPipe">
             <summary>
             <para>
@@ -75,7 +147,7 @@
             Uses the 8 FDB zitareverb algorithm to provide reverb to processed samples ( see: https://paulbatchelor.github.io/res/soundpipe/docs/zitarev.html )
             </summary>
         </member>
-        <member name="F:SharpPipe.ZitaReverb.Pipe">
+        <member name="P:SharpPipe.ZitaReverb.Pipe">
             <summary>
             The soundpipe object used by this reverb
             </summary>
@@ -354,6 +426,66 @@
         <member name="T:SharpPipe.sp_zitarev_args">
             <summary>
             Array struct because P/Invoke is a pain in the butt and doesn't let you do fixed buffers of pointers >:(
+            </summary>
+        </member>
+        <member name="T:SharpPipe.ZitaParameters">
+            <summary>
+            Parameter struct that implements the Zita filter interface
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.InDelay">
+            <summary>
+            The input delay (ms) before reverb is applied to the incoming signal (default: 60ms)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.Crossover">
+            <summary>
+            The separation between 'high' and 'low' frequencies (default: 200hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.RT60Low">
+            <summary>
+            The time in seconds it takes for low frequencies to decrease by 60dB (default: 3 seconds)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.RT60Mid">
+            <summary>
+            The time in seconds it takes for mid frequencies to decrease by 60dB (default: 2 seconds)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.HighFrequencyDamping">
+            <summary>
+            Frequencies (hz) above this one are heard half as long as as the mid-range frequencies - e.g. when their T60 is half of the middle-range's T60 (default: 6000hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.EQ1Frequency">
+            <summary>
+             The center frequency (hz) of the Regalia Mitra peaking equalizer for the first section (default: 315hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.EQ1Level">
+            <summary>
+            The peak level (dB) of equalizer 1 (default: 0dB)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.EQ2Frequency">
+            <summary>
+             The center frequency (hz) of the Regalia Mitra peaking equalizer for the second section (default: 1500hz)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.EQ2Level">
+            <summary>
+            The peak level (dB) of equalizer 2 (default: 0dB)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.Mix">
+            <summary>
+            Mixes the wet and dry signals - e.g. 0 is no reverb, 1 is only reverb (default: 1)
+            </summary>
+        </member>
+        <member name="P:SharpPipe.ZitaParameters.Level">
+            <summary>
+            The factor (dB) to scale the output by (default: -20dB)
             </summary>
         </member>
     </members>
