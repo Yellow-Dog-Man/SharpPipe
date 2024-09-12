@@ -10,7 +10,8 @@ public static class ParameterHelper
     /// </summary>
     /// <param name="zita">This Zita filter</param>
     /// <param name="other">The Zita filter to copy parameters from</param>
-    public static IZitaFilter FromOther(this IZitaFilter zita, in IZitaFilter other)
+    public static T FromOther<T>(this T zita, in IZitaFilter other)
+        where T : IZitaFilter
     {
         zita.InDelay = other.InDelay;
         zita.Crossover = other.Crossover;
