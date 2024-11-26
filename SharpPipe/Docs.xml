@@ -9,7 +9,7 @@
             Helper class for easier manipulation of parameters
             </summary>
         </member>
-        <member name="M:SharpPipe.ParameterHelper.FromOther(SharpPipe.IZitaFilter,SharpPipe.IZitaFilter@)">
+        <member name="M:SharpPipe.ParameterHelper.FromOther``1(``0,SharpPipe.IZitaFilter@)">
             <summary>
             Copies the parameters from one Zita filter implementation to another
             </summary>
@@ -232,6 +232,13 @@
             <param name="outLeft">Reference to the variable where the result for the left channel will be stored</param>
             <param name="outRight">Reference to the variable where the result for the right channel will be stored</param>
         </member>
+        <member name="M:SharpPipe.ZitaReverb.Compute(System.Span{System.Single},System.Span{System.Single})">
+            <summary>
+            Computes reverb on a span of audio samples and places them into an output buffer
+            </summary>
+            <param name="stereoIn">Left audio sample</param>
+            <param name="stereoOut">Right audio sample</param>
+        </member>
         <member name="M:SharpPipe.ZitaReverb.Dispose">
             <summary>
             Disposes of this unmanaged resource
@@ -306,6 +313,17 @@
             Frees a <see cref="T:SharpPipe.sp_zitarev"/> struct from memory
             </summary>
             <param name="zitaRevObject">Reference to the pointer to the struct to be freed</param>
+            <returns>Success code</returns>
+        </member>
+        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_compute_many(System.IntPtr,System.IntPtr,System.Int32,System.Single**,System.Single**)">
+            <summary>
+            Computes a span of audio samples from an input buffer of stereo samples and places the result into an output buffer of stereo samples
+            </summary>
+            <param name="spObject">Pointer to a <see cref="T:SharpPipe.sp_data"/> struct for gathering info</param>
+            <param name="zitaRevObject">Pointer to a <see cref="T:SharpPipe.sp_zitarev"/> struct</param>
+            <param name="count">Length of the input/output buffers</param>
+            <param name="inputs">Pointer (float**) storing two float* buffers that each carry the left (pointer 0) and right (pointer 1) signal respectively</param>
+            <param name="outputs">Pointer (float**) storing to float* buffers that each will receive the processed left (pointer 0) and right (pointer 1) samples respectively</param>
             <returns>Success code</returns>
         </member>
         <member name="T:SharpPipe.sp_data">

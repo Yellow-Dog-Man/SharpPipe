@@ -39,20 +39,6 @@ public static partial class SharpPipeNatives
     public static unsafe extern int sp_zitarev_compute(IntPtr spObject, IntPtr zitaRevObject, ref float in1, ref float in2, [In, Out] ref float out1, [In, Out] ref float out2);
 
 
-    // P/Invoking the weird pointer-to-a-pointer type this wants is tricky and was taking a lot of time.
-    // /// <summary>
-    // /// Computes a span of audio samples from an input buffer of stereo samples and places the result into an output buffer of stereo samples
-    // /// </summary>
-    // /// <param name="spObject">Pointer to a <see cref="sp_data"/> struct for gathering info</param>
-    // /// <param name="zitaRevObject">Pointer to a <see cref="sp_zitarev"/> struct</param>
-    // /// <param name="size">Size of the input/output buffers</param>
-    // /// <param name="stereoIn">Reference to the input buffer of stereo samples</param>
-    // /// <param name="stereoOut">Reference to the output buffer of stereo samples</param>
-    // /// <returns>Success code</returns>
-    // [DllImport("libsoundpipe")]
-    // public static unsafe extern int sp_zitarev_compute_many(IntPtr spObject, IntPtr zitaRevObject, int size, [In, Out] ref IntPtr stereoIn, [In, Out] ref IntPtr stereoOut);
-
-
 
     /// <summary>
     /// Frees a <see cref="sp_zitarev"/> struct from memory
@@ -61,4 +47,18 @@ public static partial class SharpPipeNatives
     /// <returns>Success code</returns>
     [DllImport("libsoundpipe")]
     public static unsafe extern int sp_zitarev_destroy(ref IntPtr zitaRevObject);
+
+
+
+    /// <summary>
+    /// Computes a span of audio samples from an input buffer of stereo samples and places the result into an output buffer of stereo samples
+    /// </summary>
+    /// <param name="spObject">Pointer to a <see cref="sp_data"/> struct for gathering info</param>
+    /// <param name="zitaRevObject">Pointer to a <see cref="sp_zitarev"/> struct</param>
+    /// <param name="count">Length of the input/output buffers</param>
+    /// <param name="inputs">Pointer (float**) storing two float* buffers that each carry the left (pointer 0) and right (pointer 1) signal respectively</param>
+    /// <param name="outputs">Pointer (float**) storing to float* buffers that each will receive the processed left (pointer 0) and right (pointer 1) samples respectively</param>
+    /// <returns>Success code</returns>
+    [DllImport("libsoundpipe")]
+    public static unsafe extern int sp_zitarev_compute_many(IntPtr spObject, IntPtr zitaRevObject, int count, float** inputs, float** outputs);
 }

@@ -153,23 +153,38 @@ public class ZitaReverb : IDisposable, IZitaFilter
 
 
     // I don't understand P/Invoke well enough to do this yet and it was eating a lot of time.
-    // /// <summary>
-    // /// Computes reverb on a span of audio samples and places them into an output buffer
-    // /// </summary>
-    // /// <param name="stereoIn">Left audio sample</param>
-    // /// <param name="stereoOut">Right audio sample</param>
-    // [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    // public unsafe void Compute(Span<float> stereoIn, Span<float> stereoOut)
-    // {
-    //     if (stereoIn.Length != stereoOut.Length)
-    //         throw new ArgumentException($"Input and output spans are of inequal length! (stereoIn length: {stereoIn.Length}, stereoOut length: {stereoOut.Length})");
+    /// <summary>
+    /// Computes reverb on a span of audio samples and places them into an output buffer
+    /// </summary>
+    /// <param name="stereoIn">Left audio sample</param>
+    /// <param name="stereoOut">Right audio sample</param>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public unsafe void Compute(Span<float> stereoIn, Span<float> stereoOut)
+    {
+        if (stereoIn.Length != stereoOut.Length)
+            throw new ArgumentException($"Input and output spans are of inequal length! (stereoIn length: {stereoIn.Length}, stereoOut length: {stereoOut.Length})");
 
+        int halfLength = stereoIn.Length / 2;
+        float** inSamples = stackalloc float*[2];
+        float* inLeft = stackalloc float[halfLength];
+        float* inRight = stackalloc float[halfLength];
+        inSamples[0] = inLeft;
+        inSamples[1] = inRight;
 
-    //     IntPtr inPtr = new(Unsafe.AsPointer(ref stereoIn[0]));
-    //     IntPtr outPtr = new(Unsafe.AsPointer(ref stereoOut[0]));
+        for (int i = 0; i < halfLength; i++)
+        {
+            inLeft[i] = stereoIn[i * 2];
+            inRight[i] = stereoIn[i * 2 + 1];
+        }
 
-    //     SharpPipeNatives.sp_zitarev_compute_many(Pipe.pipeObject, zitaRevObject, stereoIn.Length, ref inPtr, ref outPtr);
-    // }
+        SharpPipeNatives.sp_zitarev_compute_many(Pipe.pipeObject, zitaRevObject, halfLength, inSamples, inSamples);
+
+        for (int i = 0; i < halfLength; i++)
+        {
+            stereoOut[i * 2] = inLeft[i];
+            stereoOut[i * 2 + 1] = inRight[i];
+        }
+    }
 
     
     
