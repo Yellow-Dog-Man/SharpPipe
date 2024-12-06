@@ -1,6 +1,6 @@
 # SharpPipe
 
-![NuGet Version](https://img.shields.io/nuget/v/YellowDogMan.SharpPipe)
+![NuGet Version](https://img.shields.io/nuget/v/YellowDogMan.SharpPipe?link=https%3A%2F%2Fwww.nuget.org%2Fpackages%2FYellowDogMan.SharpPipe)
 
 SharpPipe is a managed wrapper around SoundPipe - a C sound processing library made by Paul Batchelor and hosted on [sourcehut](https://git.sr.ht/~pbatch/soundpipe).
 
