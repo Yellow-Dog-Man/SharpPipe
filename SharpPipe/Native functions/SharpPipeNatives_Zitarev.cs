@@ -60,5 +60,5 @@ public static partial class SharpPipeNatives
     /// <param name="outputs">Pointer (float**) storing to float* buffers that each will receive the processed left (pointer 0) and right (pointer 1) samples respectively</param>
     /// <returns>Success code</returns>
     [DllImport("libsoundpipe")]
-    public static unsafe extern int sp_zitarev_compute_many(IntPtr spObject, IntPtr zitaRevObject, int count, float** inputs, float** outputs);
+    public static unsafe extern int sp_zitarev_compute_many(IntPtr spObject, IntPtr zitaRevObject, int count, ref IntPtr inputs, ref IntPtr outputs);
 }

@@ -139,12 +139,13 @@ public class ZitaReverb : IDisposable, IZitaFilter
 
 
     /// <summary>
-    /// Computes reverb on a single audio sample for left and right channels
+    /// Computes reverb on a single audio sample for left and right channels.
     /// </summary>
     /// <param name="left">Left audio sample</param>
     /// <param name="right">Right audio sample</param>
     /// <param name="outLeft">Reference to the variable where the result for the left channel will be stored</param>
     /// <param name="outRight">Reference to the variable where the result for the right channel will be stored</param>
+    [Obsolete("Use the span-accepting overload to avoid significant performance penalties.")]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Compute(float left, float right, ref float outLeft, ref float outRight)
     {
@@ -152,24 +153,60 @@ public class ZitaReverb : IDisposable, IZitaFilter
     }
 
 
-    // I don't understand P/Invoke well enough to do this yet and it was eating a lot of time.
     /// <summary>
-    /// Computes reverb on a span of audio samples and places them into an output buffer
+    /// Computes reverb from an arbitrarily-sized span of stereo samples and places them into an output buffer. Processes the signal in chunks.
+    /// <para>1 stereo sample == 2 floats. E.g. A chunkSize of 1024 will process 2048 floats at once.</para>
     /// </summary>
-    /// <param name="stereoIn">Left audio sample</param>
-    /// <param name="stereoOut">Right audio sample</param>
+    /// <param name="stereoIn">Interleaved input stereo signal.</param>
+    /// <param name="stereoOut">Interleaved output stereo signal.</param>
+    /// <param name="chunkSize">The size of each chunk to be processed.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public unsafe void Compute(Span<float> stereoIn, Span<float> stereoOut)
+    public unsafe void Compute(Span<float> stereoIn, Span<float> stereoOut, int chunkSize = 1024)
     {
-        if (stereoIn.Length != stereoOut.Length)
-            throw new ArgumentException($"Input and output spans are of inequal length! (stereoIn length: {stereoIn.Length}, stereoOut length: {stereoOut.Length})");
+        if (stereoIn.Length > stereoOut.Length)
+            throw new ArgumentOutOfRangeException(nameof(stereoIn), $"The input span is larger than {nameof(stereoOut)}!");
 
+        int length = stereoIn.Length;
+        int stereoBlockSize = Math.Abs(chunkSize) * 2; // Two channels.
+
+        // Process a batch of samples at once.
+        for (int i = 0; i < length;)
+        {
+            // Get the length to process. This accounts for when you're close to the end of input buffer.
+            int remainingLength = length - i;
+            int lengthToProcess = Math.Min(remainingLength, stereoBlockSize);
+
+            // Slice the input into a chunk that can be computed.
+            Span<float> inputSliced = stereoIn.Slice(i, lengthToProcess);
+
+            // Slice the output into an equivalent chunk.
+            Span<float> outputSliced = stereoOut.Slice(i, lengthToProcess);
+
+            // Compute a N blocks of data depending on the length of the input data.
+            ComputeBlock(inputSliced, outputSliced);
+
+            // Increment the index by the amount of data that was just processed.
+            i += lengthToProcess;
+        }
+    }
+
+
+
+    /// <summary>
+    /// Computes reverb on a span of audio samples and places them into an output buffer. Processes a single chunk of samples. Does not do bounds checking.
+    /// <para>
+    /// NOTE: This reorients the interleaved samples from left/right/left/right into two separate left and right
+    /// buffers on the stack. Be mindful of how big your buffer size is with this function. If you want to process an arbitrary
+    /// amount of samples, use: <see cref="Compute(Span{float}, Span{float}, int)"/>
+    /// </para>
+    /// </summary>
+    /// <param name="stereoIn">Interleaved input stereo signal.</param>
+    /// <param name="stereoOut">Interleaved output stereo signal.</param>
+    public unsafe void ComputeBlock(Span<float> stereoIn, Span<float> stereoOut)
+    {
         int halfLength = stereoIn.Length / 2;
-        float** inSamples = stackalloc float*[2];
-        float* inLeft = stackalloc float[halfLength];
-        float* inRight = stackalloc float[halfLength];
-        inSamples[0] = inLeft;
-        inSamples[1] = inRight;
+        Span<float> inLeft = stackalloc float[halfLength];
+        Span<float> inRight = stackalloc float[halfLength];
 
         for (int i = 0; i < halfLength; i++)
         {
@@ -177,7 +214,20 @@ public class ZitaReverb : IDisposable, IZitaFilter
             inRight[i] = stereoIn[i * 2 + 1];
         }
 
-        SharpPipeNatives.sp_zitarev_compute_many(Pipe.pipeObject, zitaRevObject, halfLength, inSamples, inSamples);
+        Span<nint> inSamples = stackalloc nint[2];
+        unsafe
+        {
+            fixed (float* inLeftPtr = inLeft)
+            fixed (float* inRightPtr = inRight)
+            fixed (nint* inSamplesPtr = inSamples)
+            {
+                inSamplesPtr[0] = (nint)inLeftPtr;
+                inSamplesPtr[1] = (nint)inRightPtr;
+
+                SharpPipeNatives.sp_zitarev_compute_many(Pipe.pipeObject, zitaRevObject, halfLength, ref *inSamplesPtr, ref *inSamplesPtr);
+            }
+        }
+
 
         for (int i = 0; i < halfLength; i++)
         {
