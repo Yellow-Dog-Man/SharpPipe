@@ -40,30 +40,31 @@ public static class ParameterHelper
         where TZita : IZitaFilter
     {
         #if NET8_0_OR_GREATER
-        zita.InDelay              = Math.Clamp(zita.InDelay, 0f, 900f).EnsureValidNum(60f);
-        zita.Crossover            = Math.Clamp(zita.Crossover, 20f, 20000f).EnsureValidNum(200f);
-        zita.RT60Low              = Math.Clamp(zita.RT60Low, 0f, 30f).EnsureValidNum(3f);
-        zita.RT60Mid              = Math.Clamp(zita.RT60Mid, 0f, 30f).EnsureValidNum(2f);
-        zita.HighFrequencyDamping = Math.Clamp(zita.HighFrequencyDamping, 20f, 20000f).EnsureValidNum(6000f);
-        zita.EQ1Frequency         = Math.Clamp(zita.EQ1Frequency, 20f, 20000f).EnsureValidNum(315f);
-        zita.EQ1Level             = Math.Clamp(zita.EQ1Level, -90f, 20f).EnsureValidNum(0f);
-        zita.EQ2Frequency         = Math.Clamp(zita.EQ2Frequency, 20f, 20000f).EnsureValidNum(1500);
-        zita.EQ2Level             = Math.Clamp(zita.EQ2Level, -90f, 20f).EnsureValidNum(0f);
-        zita.Mix                  = Math.Clamp(zita.Mix, 0f, 1f).EnsureValidNum(1f);
-        zita.Level                = Math.Clamp(zita.Level, -90f, 20f).EnsureValidNum(-20f);
+        zita.InDelay              = Math.Clamp(zita.InDelay,              ZitaReverb.ZITA_IN_DELAY_MIN,               ZitaReverb.ZITA_IN_DELAY_MAX)              .EnsureValidNum(ZitaReverb.ZITA_IN_DELAY_DEFAULT);
+        zita.Crossover            = Math.Clamp(zita.Crossover,            ZitaReverb.ZITA_CROSSOVER_MIN,              ZitaReverb.ZITA_CROSSOVER_MAX)             .EnsureValidNum(ZitaReverb.ZITA_CROSSOVER_DEFAULT);
+        zita.RT60Low              = Math.Clamp(zita.RT60Low,              ZitaReverb.ZITA_RT60LOW_MIN,                ZitaReverb.ZITA_RT60LOW_MAX)               .EnsureValidNum(ZitaReverb.ZITA_RT60LOW_DEFAULT);
+        zita.RT60Mid              = Math.Clamp(zita.RT60Mid,              ZitaReverb.ZITA_RT60MID_MIN,                ZitaReverb.ZITA_RT60MID_MAX)               .EnsureValidNum(ZitaReverb.ZITA_RT60MID_DEFAULT);
+        zita.HighFrequencyDamping = Math.Clamp(zita.HighFrequencyDamping, ZitaReverb.ZITA_HIGH_FREQUENCY_DAMPING_MIN, ZitaReverb.ZITA_HIGH_FREQUENCY_DAMPING_MAX).EnsureValidNum(ZitaReverb.ZITA_HIGH_FREQUENCY_DAMPING_DEFAULT);
+        zita.EQ1Frequency         = Math.Clamp(zita.EQ1Frequency,         ZitaReverb.ZITA_EQ1_FREQUENCY_MIN,          ZitaReverb.ZITA_EQ1_FREQUENCY_MAX)         .EnsureValidNum(ZitaReverb.ZITA_EQ1_FREQUENCY_DEFAULT);
+        zita.EQ1Level             = Math.Clamp(zita.EQ1Level,             ZitaReverb.ZITA_EQ1_LEVEL_MIN,              ZitaReverb.ZITA_EQ1_LEVEL_MAX)             .EnsureValidNum(ZitaReverb.ZITA_EQ1_LEVEL_DEFAULT);
+        zita.EQ2Frequency         = Math.Clamp(zita.EQ2Frequency,         ZitaReverb.ZITA_EQ2_FREQUENCY_MIN,          ZitaReverb.ZITA_EQ2_FREQUENCY_MAX)         .EnsureValidNum(ZitaReverb.ZITA_EQ2_FREQUENCY_DEFAULT);
+        zita.EQ2Level             = Math.Clamp(zita.EQ2Level,             ZitaReverb.ZITA_EQ2_LEVEL_MIN,              ZitaReverb.ZITA_EQ2_LEVEL_MAX)             .EnsureValidNum(ZitaReverb.ZITA_EQ2_LEVEL_DEFAULT);
+        zita.Mix                  = Math.Clamp(zita.Mix,                  ZitaReverb.ZITA_MIX_MIN,                    ZitaReverb.ZITA_MIX_MAX)                   .EnsureValidNum(ZitaReverb.ZITA_MIX_DEFAULT);
+        zita.Level                = Math.Clamp(zita.Level,                ZitaReverb.ZITA_LEVEL_MIN,                  ZitaReverb.ZITA_LEVEL_MAX)                 .EnsureValidNum(ZitaReverb.ZITA_LEVEL_DEFAULT);
         #else
-        float _clamp(float value, float min, float max) => Math.Max(min, Math.Min(max, value));
-        zita.InDelay              = _clamp(zita.InDelay, 0f, 900f).EnsureValidNum(60f);
-        zita.Crossover            = _clamp(zita.Crossover, 20f, 20000f).EnsureValidNum(200f);
-        zita.RT60Low              = _clamp(zita.RT60Low, 0f, 30f).EnsureValidNum(3f);
-        zita.RT60Mid              = _clamp(zita.RT60Mid, 0f, 30f).EnsureValidNum(2f);
-        zita.HighFrequencyDamping = _clamp(zita.HighFrequencyDamping, 20f, 20000f).EnsureValidNum(6000f);
-        zita.EQ1Frequency         = _clamp(zita.EQ1Frequency, 20f, 20000f).EnsureValidNum(315f);
-        zita.EQ1Level             = _clamp(zita.EQ1Level, -90f, 20f).EnsureValidNum(0f);
-        zita.EQ2Frequency         = _clamp(zita.EQ2Frequency, 20f, 20000f).EnsureValidNum(1500);
-        zita.EQ2Level             = _clamp(zita.EQ2Level, -90f, 20f).EnsureValidNum(0f);
-        zita.Mix                  = _clamp(zita.Mix, 0f, 1f).EnsureValidNum(1f);
-        zita.Level                = _clamp(zita.Level, -90f, 20f).EnsureValidNum(-20f);
+        static float _clamp(float value, float min, float max) => Math.Max(min, Math.Min(max, value));
+        
+        zita.InDelay              = _clamp(zita.InDelay,              ZitaReverb.ZITA_IN_DELAY_MIN,               ZitaReverb.ZITA_IN_DELAY_MAX)              .EnsureValidNum(ZitaReverb.ZITA_IN_DELAY_DEFAULT);
+        zita.Crossover            = _clamp(zita.Crossover,            ZitaReverb.ZITA_CROSSOVER_MIN,              ZitaReverb.ZITA_CROSSOVER_MAX)             .EnsureValidNum(ZitaReverb.ZITA_CROSSOVER_DEFAULT);
+        zita.RT60Low              = _clamp(zita.RT60Low,              ZitaReverb.ZITA_RT60LOW_MIN,                ZitaReverb.ZITA_RT60LOW_MAX)               .EnsureValidNum(ZitaReverb.ZITA_RT60LOW_DEFAULT);
+        zita.RT60Mid              = _clamp(zita.RT60Mid,              ZitaReverb.ZITA_RT60MID_MIN,                ZitaReverb.ZITA_RT60MID_MAX)               .EnsureValidNum(ZitaReverb.ZITA_RT60MID_DEFAULT);
+        zita.HighFrequencyDamping = _clamp(zita.HighFrequencyDamping, ZitaReverb.ZITA_HIGH_FREQUENCY_DAMPING_MIN, ZitaReverb.ZITA_HIGH_FREQUENCY_DAMPING_MAX).EnsureValidNum(ZitaReverb.ZITA_HIGH_FREQUENCY_DAMPING_DEFAULT);
+        zita.EQ1Frequency         = _clamp(zita.EQ1Frequency,         ZitaReverb.ZITA_EQ1_FREQUENCY_MIN,          ZitaReverb.ZITA_EQ1_FREQUENCY_MAX)         .EnsureValidNum(ZitaReverb.ZITA_EQ1_FREQUENCY_DEFAULT);
+        zita.EQ1Level             = _clamp(zita.EQ1Level,             ZitaReverb.ZITA_EQ1_LEVEL_MIN,              ZitaReverb.ZITA_EQ1_LEVEL_MAX)             .EnsureValidNum(ZitaReverb.ZITA_EQ1_LEVEL_DEFAULT);
+        zita.EQ2Frequency         = _clamp(zita.EQ2Frequency,         ZitaReverb.ZITA_EQ2_FREQUENCY_MIN,          ZitaReverb.ZITA_EQ2_FREQUENCY_MAX)         .EnsureValidNum(ZitaReverb.ZITA_EQ2_FREQUENCY_DEFAULT);
+        zita.EQ2Level             = _clamp(zita.EQ2Level,             ZitaReverb.ZITA_EQ2_LEVEL_MIN,              ZitaReverb.ZITA_EQ2_LEVEL_MAX)             .EnsureValidNum(ZitaReverb.ZITA_EQ2_LEVEL_DEFAULT);
+        zita.Mix                  = _clamp(zita.Mix,                  ZitaReverb.ZITA_MIX_MIN,                    ZitaReverb.ZITA_MIX_MAX)                   .EnsureValidNum(ZitaReverb.ZITA_MIX_DEFAULT);
+        zita.Level                = _clamp(zita.Level,                ZitaReverb.ZITA_LEVEL_MIN,                  ZitaReverb.ZITA_LEVEL_MAX)                 .EnsureValidNum(ZitaReverb.ZITA_LEVEL_DEFAULT);
         #endif
 
         return zita;
