@@ -9,6 +9,51 @@ namespace SharpPipe;
 /// </summary>
 public class ZitaReverb : IDisposable, IZitaFilter
 {
+    #region Default Values
+    #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+    public const float ZITA_IN_DELAY_DEFAULT = 60f;
+    public const float ZITA_CROSSOVER_DEFAULT = 200f;
+    public const float ZITA_RT60LOW_DEFAULT = 3f;
+    public const float ZITA_RT60MID_DEFAULT = 2f;
+    public const float ZITA_HIGH_FREQUENCY_DAMPING_DEFAULT = 6000f;
+    public const float ZITA_EQ1_FREQUENCY_DEFAULT = 315f;
+    public const float ZITA_EQ1_LEVEL_DEFAULT = 0f;
+    public const float ZITA_EQ2_FREQUENCY_DEFAULT = 1500f;
+    public const float ZITA_EQ2_LEVEL_DEFAULT = 0f;
+    public const float ZITA_MIX_DEFAULT = 1f;
+    public const float ZITA_LEVEL_DEFAULT = 0f;
+    #endregion
+
+    #region Min Values
+    public const float ZITA_IN_DELAY_MIN = 0f;
+    public const float ZITA_CROSSOVER_MIN = 20f;
+    public const float ZITA_RT60LOW_MIN = 0f;
+    public const float ZITA_RT60MID_MIN = 0f;
+    public const float ZITA_HIGH_FREQUENCY_DAMPING_MIN = 20f;
+    public const float ZITA_EQ1_FREQUENCY_MIN = 20f;
+    public const float ZITA_EQ1_LEVEL_MIN = -90f;
+    public const float ZITA_EQ2_FREQUENCY_MIN = 20f;
+    public const float ZITA_EQ2_LEVEL_MIN = -90f;
+    public const float ZITA_MIX_MIN = 0f;
+    public const float ZITA_LEVEL_MIN = -90f;
+    #endregion
+
+    #region Max Values
+    public const float ZITA_IN_DELAY_MAX = 900f;
+    public const float ZITA_CROSSOVER_MAX = 20000f;
+    public const float ZITA_RT60LOW_MAX = 30f;
+    public const float ZITA_RT60MID_MAX = 30f;
+    public const float ZITA_HIGH_FREQUENCY_DAMPING_MAX = 20000f;
+    public const float ZITA_EQ1_FREQUENCY_MAX = 20000f;
+    public const float ZITA_EQ1_LEVEL_MAX = 20f;
+    public const float ZITA_EQ2_FREQUENCY_MAX = 20000f;
+    public const float ZITA_EQ2_LEVEL_MAX = 20f;
+    public const float ZITA_MIX_MAX = 1f;
+    public const float ZITA_LEVEL_MAX = 20f;
+    #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+    #endregion
+
+
     internal IntPtr zitaRevObject;
 
     /// <summary>
