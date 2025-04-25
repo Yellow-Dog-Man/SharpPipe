@@ -225,19 +225,33 @@
         </member>
         <member name="M:SharpPipe.ZitaReverb.Compute(System.Single,System.Single,System.Single@,System.Single@)">
             <summary>
-            Computes reverb on a single audio sample for left and right channels
+            Computes reverb on a single audio sample for left and right channels.
             </summary>
             <param name="left">Left audio sample</param>
             <param name="right">Right audio sample</param>
             <param name="outLeft">Reference to the variable where the result for the left channel will be stored</param>
             <param name="outRight">Reference to the variable where the result for the right channel will be stored</param>
         </member>
-        <member name="M:SharpPipe.ZitaReverb.Compute(System.Span{System.Single},System.Span{System.Single})">
+        <member name="M:SharpPipe.ZitaReverb.Compute(System.Span{System.Single},System.Span{System.Single},System.Int32)">
             <summary>
-            Computes reverb on a span of audio samples and places them into an output buffer
+            Computes reverb on a span of audio samples and places them into an output buffer. Processes the signal in blocks.
+            <para>1 block = 2 samples.</para>
             </summary>
-            <param name="stereoIn">Left audio sample</param>
-            <param name="stereoOut">Right audio sample</param>
+            <param name="stereoIn">Interleaved input stereo signal.</param>
+            <param name="stereoOut">Interleaved output stereo signal.</param>
+            <param name="blockSize">The number of blocks to process at once.</param>
+        </member>
+        <member name="M:SharpPipe.ZitaReverb.ComputeBlock(System.Span{System.Single},System.Span{System.Single})">
+            <summary>
+            Computes reverb on a span of audio samples and places them into an output buffer. Processes a single block of samples.
+            <para>
+            NOTE: This reorients the interleaved samples from left/right/left/right into two separate left and right
+            buffers on the stack. Be mindful of how big your buffer size is with this function. If you want to process an arbitrary
+            amount of samples, use: <see cref="M:SharpPipe.ZitaReverb.Compute(System.Span{System.Single},System.Span{System.Single},System.Int32)"/>
+            </para>
+            </summary>
+            <param name="stereoIn">Interleaved input stereo signal.</param>
+            <param name="stereoOut">Interleaved output stereo signal.</param>
         </member>
         <member name="M:SharpPipe.ZitaReverb.Dispose">
             <summary>
@@ -315,7 +329,7 @@
             <param name="zitaRevObject">Reference to the pointer to the struct to be freed</param>
             <returns>Success code</returns>
         </member>
-        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_compute_many(System.IntPtr,System.IntPtr,System.Int32,System.Single**,System.Single**)">
+        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_compute_many(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr@,System.IntPtr@)">
             <summary>
             Computes a span of audio samples from an input buffer of stereo samples and places the result into an output buffer of stereo samples
             </summary>
