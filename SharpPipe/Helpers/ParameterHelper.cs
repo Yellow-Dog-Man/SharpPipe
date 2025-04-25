@@ -39,17 +39,32 @@ public static class ParameterHelper
     public static TZita EnsureValidParameters<TZita>(this TZita zita)
         where TZita : IZitaFilter
     {
-        zita.InDelay = Math.Clamp(zita.InDelay, 0f, 900f).EnsureValidNum(60f);
-        zita.Crossover = Math.Clamp(zita.Crossover, 20f, 20000f).EnsureValidNum(200f);
-        zita.RT60Low = Math.Clamp(zita.RT60Low, 0f, 30f).EnsureValidNum(3f);
-        zita.RT60Mid = Math.Clamp(zita.RT60Mid, 0f, 30f).EnsureValidNum(2f);
+        #if NET8_0_OR_GREATER
+        zita.InDelay              = Math.Clamp(zita.InDelay, 0f, 900f).EnsureValidNum(60f);
+        zita.Crossover            = Math.Clamp(zita.Crossover, 20f, 20000f).EnsureValidNum(200f);
+        zita.RT60Low              = Math.Clamp(zita.RT60Low, 0f, 30f).EnsureValidNum(3f);
+        zita.RT60Mid              = Math.Clamp(zita.RT60Mid, 0f, 30f).EnsureValidNum(2f);
         zita.HighFrequencyDamping = Math.Clamp(zita.HighFrequencyDamping, 20f, 20000f).EnsureValidNum(6000f);
-        zita.EQ1Frequency = Math.Clamp(zita.EQ1Frequency, 20f, 20000f).EnsureValidNum(315f);
-        zita.EQ1Level = Math.Clamp(zita.EQ1Level, -90f, 20f).EnsureValidNum(0f);
-        zita.EQ2Frequency = Math.Clamp(zita.EQ2Frequency, 20f, 20000f).EnsureValidNum(1500);
-        zita.EQ2Level = Math.Clamp(zita.EQ2Level, -90f, 20f).EnsureValidNum(0f);
-        zita.Mix = Math.Clamp(zita.Mix, 0f, 1f).EnsureValidNum(1f);
-        zita.Level = Math.Clamp(zita.Level, -90f, 20f).EnsureValidNum(-20f);
+        zita.EQ1Frequency         = Math.Clamp(zita.EQ1Frequency, 20f, 20000f).EnsureValidNum(315f);
+        zita.EQ1Level             = Math.Clamp(zita.EQ1Level, -90f, 20f).EnsureValidNum(0f);
+        zita.EQ2Frequency         = Math.Clamp(zita.EQ2Frequency, 20f, 20000f).EnsureValidNum(1500);
+        zita.EQ2Level             = Math.Clamp(zita.EQ2Level, -90f, 20f).EnsureValidNum(0f);
+        zita.Mix                  = Math.Clamp(zita.Mix, 0f, 1f).EnsureValidNum(1f);
+        zita.Level                = Math.Clamp(zita.Level, -90f, 20f).EnsureValidNum(-20f);
+        #else
+        float _clamp(float value, float min, float max) => Math.Max(min, Math.Min(max, value));
+        zita.InDelay              = _clamp(zita.InDelay, 0f, 900f).EnsureValidNum(60f);
+        zita.Crossover            = _clamp(zita.Crossover, 20f, 20000f).EnsureValidNum(200f);
+        zita.RT60Low              = _clamp(zita.RT60Low, 0f, 30f).EnsureValidNum(3f);
+        zita.RT60Mid              = _clamp(zita.RT60Mid, 0f, 30f).EnsureValidNum(2f);
+        zita.HighFrequencyDamping = _clamp(zita.HighFrequencyDamping, 20f, 20000f).EnsureValidNum(6000f);
+        zita.EQ1Frequency         = _clamp(zita.EQ1Frequency, 20f, 20000f).EnsureValidNum(315f);
+        zita.EQ1Level             = _clamp(zita.EQ1Level, -90f, 20f).EnsureValidNum(0f);
+        zita.EQ2Frequency         = _clamp(zita.EQ2Frequency, 20f, 20000f).EnsureValidNum(1500);
+        zita.EQ2Level             = _clamp(zita.EQ2Level, -90f, 20f).EnsureValidNum(0f);
+        zita.Mix                  = _clamp(zita.Mix, 0f, 1f).EnsureValidNum(1f);
+        zita.Level                = _clamp(zita.Level, -90f, 20f).EnsureValidNum(-20f);
+        #endif
 
         return zita;
     }
