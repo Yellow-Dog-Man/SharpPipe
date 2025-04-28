@@ -10,7 +10,7 @@ public static class ParameterHelper
     /// </summary>
     /// <param name="zita">This Zita filter</param>
     /// <param name="other">The Zita filter to copy parameters from</param>
-    public static TFrom FromOther<TFrom, TTo>(this TFrom zita, in TTo other)
+    public static TFrom FromOther<TFrom, TTo>(this TFrom zita, TTo other)
         where TFrom : IZitaFilter
         where TTo : IZitaFilter
     {
