@@ -7,7 +7,7 @@ namespace SharpPipe;
 /// <summary>
 /// Uses the 8 FDB zitareverb algorithm to provide reverb to processed samples ( see: https://paulbatchelor.github.io/res/soundpipe/docs/zitarev.html )
 /// </summary>
-public class ZitaReverb : IDisposable, IZitaFilter
+public sealed class ZitaReverb : IDisposable, IZitaFilter
 {
     #region Default Values
     #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
