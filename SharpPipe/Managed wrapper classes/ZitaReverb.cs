@@ -151,8 +151,8 @@ public class ZitaReverb : IDisposable, IZitaFilter
     /// </summary>
     public float Mix
     {
-        get => _impl.Mix;
-        set => _impl.Mix = value;
+        get => 1f - (_impl.Mix * 0.5f + 0.5f);
+        set => _impl.Mix = (1f - value) * 2f - 1f;
     }
 
     /// <summary>
@@ -428,6 +428,7 @@ sealed class ZitaRev
 	public ZitaRev(int sample_rate)
 	{
 		fSampleRate = sample_rate;
+
 		fConst0 = (float)Math.Min(1.92e+05f, (float)Math.Max(1.0f, (float)(fSampleRate)));
 		fConst1 = 6.2831855f / fConst0;
 		fConst2 = (float)Math.Floor(0.174713f * fConst0 + 0.5f);
