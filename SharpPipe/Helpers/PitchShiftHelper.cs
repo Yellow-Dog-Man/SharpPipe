@@ -8,17 +8,17 @@ public static class PitchShiftHelpers
     /// <summary>
     /// Copies the parameters from one pitch shift filter implementation to another
     /// </summary>
-    /// <param name="zita">This pitch shift filter</param>
+    /// <param name="shifter">This pitch shift filter</param>
     /// <param name="other">The pitch shift filter to copy parameters from</param>
-    public static TFrom FromOther<TFrom, TTo>(this TFrom zita, TTo other)
+    public static TFrom FromOther<TFrom, TTo>(this TFrom shifter, TTo other)
         where TFrom : IPitchShiftFilter
         where TTo : IPitchShiftFilter
     {
-        zita.SemitoneShift   = other.SemitoneShift;
-        zita.WindowSize      = other.WindowSize;
-        zita.CrossfadeSamples = other.CrossfadeSamples;
+        shifter.SemitoneShift   = other.SemitoneShift;
+        shifter.WindowSize      = other.WindowSize;
+        shifter.CrossfadeSamples = other.CrossfadeSamples;
 
-        return zita;
+        return shifter;
     }
 
 
