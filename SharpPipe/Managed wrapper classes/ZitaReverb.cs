@@ -27,8 +27,8 @@ public sealed class ZitaReverb : IDisposable, IZitaFilter
     #region Min Values
     public const float ZITA_IN_DELAY_MIN = 0f;
     public const float ZITA_CROSSOVER_MIN = 20f;
-    public const float ZITA_RT60LOW_MIN = 0f;
-    public const float ZITA_RT60MID_MIN = 0f;
+    public const float ZITA_RT60LOW_MIN = 0.05f;
+    public const float ZITA_RT60MID_MIN = 0.05f;
     public const float ZITA_HIGH_FREQUENCY_DAMPING_MIN = 20f;
     public const float ZITA_EQ1_FREQUENCY_MIN = 20f;
     public const float ZITA_EQ1_LEVEL_MIN = -90f;
@@ -41,15 +41,15 @@ public sealed class ZitaReverb : IDisposable, IZitaFilter
     #region Max Values
     public const float ZITA_IN_DELAY_MAX = 900f;
     public const float ZITA_CROSSOVER_MAX = 20000f;
-    public const float ZITA_RT60LOW_MAX = 30f;
-    public const float ZITA_RT60MID_MAX = 30f;
+    public const float ZITA_RT60LOW_MAX = 40f;
+    public const float ZITA_RT60MID_MAX = 40f;
     public const float ZITA_HIGH_FREQUENCY_DAMPING_MAX = 20000f;
     public const float ZITA_EQ1_FREQUENCY_MAX = 20000f;
-    public const float ZITA_EQ1_LEVEL_MAX = 20f;
+    public const float ZITA_EQ1_LEVEL_MAX = 45f;
     public const float ZITA_EQ2_FREQUENCY_MAX = 20000f;
-    public const float ZITA_EQ2_LEVEL_MAX = 20f;
+    public const float ZITA_EQ2_LEVEL_MAX = 45f;
     public const float ZITA_MIX_MAX = 1f;
-    public const float ZITA_LEVEL_MAX = 20f;
+    public const float ZITA_LEVEL_MAX = 45f;
     #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     #endregion
 
