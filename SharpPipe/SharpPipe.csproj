@@ -20,7 +20,7 @@
   
 
     <DocumentationFile>./Docs.xml</DocumentationFile>
-    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;linux-x64;linux-arm64</RuntimeIdentifiers>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,8 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="runtimes\win-x64\native\libsoundpipe.dll" Pack="true" PackagePath="runtimes\win-x64\native\" />
-    <None Include="runtimes\linux-x64\native\libsoundpipe.so" Pack="true" PackagePath="runtimes\linux-x64\native\" />
+    <None Include="native\win-x64\native\libsoundpipe.dll" Pack="true" PackagePath="runtimes\win-x64\native\" />
+    <None Include="native\linux-x64\native\libsoundpipe.so" Pack="true" PackagePath="runtimes\linux-x64\native\" />
+    <None Include="native\linux-arm64\native\libsoundpipe.so" Pack="true" PackagePath="runtimes\linux-arm64\native\" />
   </ItemGroup>
 
 </Project>

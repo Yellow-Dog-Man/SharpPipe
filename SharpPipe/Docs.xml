@@ -4,17 +4,67 @@
         <name>SharpPipe</name>
     </assembly>
     <members>
-        <member name="T:SharpPipe.ParameterHelper">
+        <member name="T:SharpPipe.ParameterHelpers">
             <summary>
             Helper class for easier manipulation of parameters
             </summary>
         </member>
-        <member name="M:SharpPipe.ParameterHelper.FromOther``1(``0,SharpPipe.IZitaFilter@)">
+        <member name="M:SharpPipe.ParameterHelpers.Clamp(System.Single,System.Single,System.Single)">
+            <summary>
+            Clamps a float between a min and max value. (Supplementary for .NET Framework 4.6.2/4.7.2 builds)
+            </summary>
+            <param name="value">Value to clamp</param>
+            <param name="min">Minimum value</param>
+            <param name="max">Maximum value</param>
+            <returns>Clamped value</returns>
+        </member>
+        <member name="M:SharpPipe.ParameterHelpers.EnsureValidNum(System.Single,System.Single)">
+            <summary>
+            Ensures that a number is valid with an optional fallback.
+            </summary>
+            <param name="num">The number to check.</param>
+            <param name="fallback">The optional fallback to return if the number is invalid.</param>
+            <returns>The input number if valid, otherwise the fallback value.</returns>
+        </member>
+        <member name="T:SharpPipe.PitchShiftHelpers">
+            <summary>
+            Helpers for pitch shifter filters.
+            </summary>
+        </member>
+        <member name="M:SharpPipe.PitchShiftHelpers.FromOther``2(``0,``1)">
+            <summary>
+            Copies the parameters from one pitch shift filter implementation to another
+            </summary>
+            <param name="shifter">This pitch shift filter</param>
+            <param name="other">The pitch shift filter to copy parameters from</param>
+        </member>
+        <member name="M:SharpPipe.PitchShiftHelpers.EnsureValidParameters``1(``0)">
+            <summary>
+            Ensures that the input values for a given <see cref="T:SharpPipe.IPitchShiftFilter"/> are within acceptable ranges.
+            </summary>
+            <typeparam name="TPitchShifter">The <see cref="T:SharpPipe.IPitchShiftFilter"/> type.</typeparam>
+            <param name="shifter">The <typeparamref name="TPitchShifter"/> to validate the parameters for.</param>
+            <returns>The original <typeparamref name="TPitchShifter"/> but with validated parameters.</returns>
+        </member>
+        <member name="T:SharpPipe.ZitaHelpers">
+            <summary>
+            Helpers for Zita filters.
+            </summary>
+        </member>
+        <member name="M:SharpPipe.ZitaHelpers.FromOther``2(``0,``1)">
             <summary>
             Copies the parameters from one Zita filter implementation to another
             </summary>
             <param name="zita">This Zita filter</param>
             <param name="other">The Zita filter to copy parameters from</param>
+        </member>
+        <member name="M:SharpPipe.ZitaHelpers.EnsureValidParameters``1(``0)">
+            <summary>
+            Ensures that the input values for a given <see cref="T:SharpPipe.IZitaFilter"/> are within acceptable ranges.
+            </summary>
+            <typeparam name="TZita">The <see cref="T:SharpPipe.IZitaFilter"/> type.</typeparam>
+            <param name="zita">The <typeparamref name="TZita"/> to validate the parameters for.</param>
+            <returns>The original <typeparamref name="TZita"/> but with validated parameters.</returns>
         </member>
         <member name="T:SharpPipe.IZitaFilter">
             <summary>
@@ -75,6 +125,69 @@
             <summary>
             The factor (dB) to scale the output by (default: -20dB)
             </summary>
+        </member>
+        <member name="T:SharpPipe.IPitchShiftFilter">
+            <summary>
+            Represents an object that imlements pitch shift filter parameters.
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IPitchShiftFilter.SemitoneShift">
+            <summary>
+            Semitones to shift the incoming signal by.
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IPitchShiftFilter.WindowSize">
+            <summary>
+            Window size (in samples) the incoming signal will be sliced into for processing.
+            </summary>
+        </member>
+        <member name="P:SharpPipe.IPitchShiftFilter.CrossfadeSamples">
+            <summary>
+            Number of samples used for crossfading between each slice.
+            <para>NOTE: Lower sample counts may produce clicking from quick crossfades.</para>
+            <para>High sample counts may produce a "wah-wah" effect in the perceived volume.</para>
+            </summary>
+        </member>
+        <member name="T:SharpPipe.PitchShift">
+            <summary>
+            Provides temporal pitch shifting to processed samples.
+            </summary>
+        </member>
+        <member name="P:SharpPipe.PitchShift.SemitoneShift">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpPipe.PitchShift.WindowSize">
+            <inheritdoc/>
+        </member>
+        <member name="P:SharpPipe.PitchShift.CrossfadeSamples">
+            <inheritdoc/>
+        </member>
+        <member name="M:SharpPipe.PitchShift.#ctor(SharpPipe.SoundPipe)">
+            <summary>
+            Instantiates a new pitch shift filter.
+            </summary>
+            <param name="pipe">The soundpipe object.</param>
+        </member>
+        <member name="M:SharpPipe.PitchShift.Compute(System.Span{System.Single},System.Span{System.Single},System.Int32)">
+            <summary>
+            Computes pitch-shift from an arbitrarily-sized span of mono samples and places them into an output buffer. Processes the signal in chunks.
+            <para>1 sample == 1 float. E.g. A chunkSize of 1024 will process 1024 floats at once.</para>
+            </summary>
+            <param name="samplesIn">Interleaved input stereo signal.</param>
+            <param name="samplesOut">Interleaved output stereo signal.</param>
+            <param name="chunkSize">The size of each chunk to be processed.</param>
+        </member>
+        <member name="M:SharpPipe.PitchShift.ComputeBlock(System.Span{System.Single},System.Span{System.Single})">
+            <summary>
+            Computes reverb on a span of audio samples and places them into an output buffer. Processes a single chunk of samples. Does not do bounds checking.
+            <para>
+            NOTE: This reorients the interleaved samples from left/right/left/right into two separate left and right
+            buffers on the stack. Be mindful of how big your buffer size is with this function. If you want to process an arbitrary
+            amount of samples, use: <see cref="M:SharpPipe.PitchShift.Compute(System.Span{System.Single},System.Span{System.Single},System.Int32)"/>
+            </para>
+            </summary>
+            <param name="samplesIn">Interleaved input stereo signal.</param>
+            <param name="samplesOut">Interleaved output stereo signal.</param>
         </member>
         <member name="T:SharpPipe.SoundPipe">
             <summary>
@@ -157,11 +270,6 @@
             True if the object is disposed
             </summary>
         </member>
-        <member name="P:SharpPipe.ZitaReverb.Data">
-            <summary>
-            Gets a reference to the struct controlled by this reverb (internal use only)
-            </summary>
-        </member>
         <member name="P:SharpPipe.ZitaReverb.InDelay">
             <summary>
             The input delay (ms) before reverb is applied to the incoming signal (default: 60ms)
@@ -223,27 +331,18 @@
             </summary>
             <param name="pipe">The soundpipe object to use</param>
         </member>
-        <member name="M:SharpPipe.ZitaReverb.Compute(System.Single,System.Single,System.Single@,System.Single@)">
-            <summary>
-            Computes reverb on a single audio sample for left and right channels.
-            </summary>
-            <param name="left">Left audio sample</param>
-            <param name="right">Right audio sample</param>
-            <param name="outLeft">Reference to the variable where the result for the left channel will be stored</param>
-            <param name="outRight">Reference to the variable where the result for the right channel will be stored</param>
-        </member>
         <member name="M:SharpPipe.ZitaReverb.Compute(System.Span{System.Single},System.Span{System.Single},System.Int32)">
             <summary>
-            Computes reverb on a span of audio samples and places them into an output buffer. Processes the signal in blocks.
-            <para>1 block = 2 samples.</para>
+            Computes reverb from an arbitrarily-sized span of stereo samples and places them into an output buffer. Processes the signal in chunks.
+            <para>1 stereo sample == 2 floats. E.g. A chunkSize of 1024 will process 2048 floats at once.</para>
             </summary>
             <param name="stereoIn">Interleaved input stereo signal.</param>
             <param name="stereoOut">Interleaved output stereo signal.</param>
-            <param name="blockSize">The number of blocks to process at once.</param>
+            <param name="chunkSize">The size of each chunk to be processed.</param>
         </member>
         <member name="M:SharpPipe.ZitaReverb.ComputeBlock(System.Span{System.Single},System.Span{System.Single})">
             <summary>
-            Computes reverb on a span of audio samples and places them into an output buffer. Processes a single block of samples.
+            Computes reverb on a span of audio samples and places them into an output buffer. Processes a single chunk of samples. Does not do bounds checking.
             <para>
             NOTE: This reorients the interleaved samples from left/right/left/right into two separate left and right
             buffers on the stack. Be mindful of how big your buffer size is with this function. If you want to process an arbitrary
@@ -293,51 +392,6 @@
             Destroys a native struct implementation of <see cref="T:SharpPipe.sp_data"/> from a reference to its pointer
             </summary>
             <param name="spObject">Reference to a pointer to the struct to be freed</param>
-            <returns>Success code</returns>
-        </member>
-        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_create(System.IntPtr@)">
-            <summary>
-            Allocates a <see cref="T:SharpPipe.sp_zitarev"/> struct and assigns its memory address to a pointer passed in by reference
-            </summary>
-            <param name="zitaRevObject">Reference to a pointer that will point to the allocated struct</param>
-            <returns>Success code</returns>
-        </member>
-        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_init(System.IntPtr,System.IntPtr)">
-            <summary>
-            Inits a <see cref="T:SharpPipe.sp_zitarev"/> struct from a pointer to it
-            </summary>
-            <param name="spObject">Pointer to a <see cref="T:SharpPipe.sp_data"/> struct for gathering info</param>
-            <param name="zitaRevObject">Pointer to a <see cref="T:SharpPipe.sp_zitarev"/> struct</param>
-            <returns>Success code</returns>
-        </member>
-        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_compute(System.IntPtr,System.IntPtr,System.Single@,System.Single@,System.Single@,System.Single@)">
-            <summary>
-            Computes a single sample of audio from references to both a left and right channel and assigns the result to the left and right variables passed in by reference
-            </summary>
-            <param name="spObject">Pointer to a <see cref="T:SharpPipe.sp_data"/> struct for gathering info</param>
-            <param name="zitaRevObject">Pointer to a <see cref="T:SharpPipe.sp_zitarev"/> struct</param>
-            <param name="in1">Reference to the left audio sample</param>
-            <param name="in2">Reference to the right audio sample</param>
-            <param name="out1">Reference to the left output audio sample</param>
-            <param name="out2">Reference to the right output audio sample</param>
-            <returns>Success code</returns>
-        </member>
-        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_destroy(System.IntPtr@)">
-            <summary>
-            Frees a <see cref="T:SharpPipe.sp_zitarev"/> struct from memory
-            </summary>
-            <param name="zitaRevObject">Reference to the pointer to the struct to be freed</param>
-            <returns>Success code</returns>
-        </member>
-        <member name="M:SharpPipe.SharpPipeNatives.sp_zitarev_compute_many(System.IntPtr,System.IntPtr,System.Int32,System.IntPtr@,System.IntPtr@)">
-            <summary>
-            Computes a span of audio samples from an input buffer of stereo samples and places the result into an output buffer of stereo samples
-            </summary>
-            <param name="spObject">Pointer to a <see cref="T:SharpPipe.sp_data"/> struct for gathering info</param>
-            <param name="zitaRevObject">Pointer to a <see cref="T:SharpPipe.sp_zitarev"/> struct</param>
-            <param name="count">Length of the input/output buffers</param>
-            <param name="inputs">Pointer (float**) storing two float* buffers that each carry the left (pointer 0) and right (pointer 1) signal respectively</param>
-            <param name="outputs">Pointer (float**) storing to float* buffers that each will receive the processed left (pointer 0) and right (pointer 1) samples respectively</param>
             <returns>Success code</returns>
         </member>
         <member name="T:SharpPipe.sp_data">
@@ -519,6 +573,20 @@
             <summary>
             The factor (dB) to scale the output by (default: -20dB)
             </summary>
+        </member>
+        <member name="T:PitchShiftParameters">
+            <summary>
+            Parameter struct that implements the pitch shift filter interface
+            </summary>
+        </member>
+        <member name="P:PitchShiftParameters.SemitoneShift">
+            <inheritdoc/>
+        </member>
+        <member name="P:PitchShiftParameters.WindowSize">
+            <inheritdoc/>
+        </member>
+        <member name="P:PitchShiftParameters.CrossfadeSamples">
+            <inheritdoc/>
         </member>
     </members>
 </doc>
